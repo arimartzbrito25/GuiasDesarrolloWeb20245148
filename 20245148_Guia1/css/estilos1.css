@@ -1,0 +1,30 @@
+body {
+    background-color: lightblue;
+}
+
+div {
+    font-size: 20px;
+}
+
+h2 {
+    text-decoration: underline;
+    color: white;
+}
+
+.resaltado {
+    color: navy;
+    font-weight: bold;
+}
+
+.mayuscula {
+    text-transform: uppercase;
+    text-align: justify;
+}
+
+.pequeno {
+    font-size: 12px;
+}
+
+.cursiva {
+    font-style: italic;
+}
