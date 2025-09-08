@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Story+Script&display=swap');
 
-
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -14,7 +14,8 @@ body {
 }
 
 .main-title {
-    background-color: #006400;
+    background: #2A7B9B;
+    background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(73, 156, 106, 1) 50%, rgba(237, 221, 83, 1) 100%);
     color: black;
     text-align: center;
     padding: 20px;
@@ -38,14 +39,29 @@ body {
     color: #333;
 }
 
-/* Sección de personajes */
-.character-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
+.container {
+    width: 90%;
+    margin: 20px auto;
+    background-color: white;
+    overflow: auto;
+    padding-top: 25px;
+}
+
+.container article {
+    width: 31.33%;
+    height: 500px;
+    float: left;
+    margin: 10px 1%;
+    padding: 10px;
+    border: 2px green solid;
+    border-radius: 30px;
+    box-shadow: 4px 4px 19px 3px rgba(161, 138, 153, 0.35);
+    transition: transform 0.2s;
+}
+
+.container article:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .character-image {
@@ -65,14 +81,10 @@ body {
     transition: transform 0.2s;
 }
 
-.character-section article:hover {
-    transform: scale(1.05);
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.character-section h3 {
-    color: #b22222;
-    margin-bottom: 10px;
+.container article h3 {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 22px;
 }
 
 .character-section p {
@@ -81,7 +93,6 @@ body {
     text-align: justify;
 }
 
-/* Footer */
 .footer-text {
     text-align: center;
     background-color: #eee;
