@@ -9,7 +9,7 @@ div[id$="diamantes"] {
     left: 300px;
 }
 
-/* Cada carta se mueve lateralmente y su z-index define la superposición */
+
 #diez_de_diamantes {
     left: 300px;
     z-index: 5;
