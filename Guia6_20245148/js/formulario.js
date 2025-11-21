@@ -13,22 +13,18 @@ const buttonLimpiarPaciente = document.getElementById("idBtnLimpiar");
 const buttonMostrarPaciente = document.getElementById("idBtnBorrar");
 const buttonAgregarPais = document.getElementById("idBtnAñadirPais");
 
+// Toast
 const notificacion = document.getElementById("idnotificacion");
 const toast = new bootstrap.Toast(notificacion);
 const mensaje = document.getElementById("idMensaje");
 
-//Componente modal
+// Modal país
 const idModal = document.getElementById("idModalPais");
 
-//Arreglo global de pacientes
+// Array global
 let arrayPaciente = [];
 
-/*
-Creando una función para que limpie el formulario
-siempre que se cargue la pagina o cuando se presione
-el boton limpiar del formulario
-*/
-
+// LIMPIAR FORMULARIO
 const limpiarForm = () => {
     inputNombre.value = "";
     inputApellido.value = "";
@@ -38,63 +34,55 @@ const limpiarForm = () => {
     cmbPais.value = 0;
     inputDireccion.value = "";
     inputNombrePais.value = "";
-
     inputNombre.focus();
 };
 
-//Funcion para validar el ingreso del paciente
-//
+// AGREGAR PACIENTE
 
 const addPaciente = function () {
     let nombre = inputNombre.value;
     let apellido = inputApellido.value;
     let fechaNacimiento = inputFechaNacimiento.value;
     let sexo =
-        inputRdMasculino.checked == true
+        inputRdMasculino.checked
             ? "Hombre"
-            : inputRdFemenino.checked == true
+            : inputRdFemenino.checked
             ? "Mujer"
             : "";
     let pais = cmbPais.value;
-    let labelPais = cmbPais.options[cmbPais.selectedIndex].text;
+    let paisLabel = cmbPais.options[cmbPais.selectedIndex].text;
     let direccion = inputDireccion.value;
 
     if (
-        nombre != "" &&
-        apellido != "" &&
-        fechaNacimiento != "" &&
-        sexo != "" &&
+        nombre !== "" &&
+        apellido !== "" &&
+        fechaNacimiento !== "" &&
+        sexo !== "" &&
         pais != 0 &&
-        direccion != ""
+        direccion !== ""
     ) {
-        //Agregando informacion al arreglo paciente
         arrayPaciente.push(
-            new Array(nombre, apellido, fechaNacimiento, sexo, labelPais, direccion)
+            new Array(nombre, apellido, fechaNacimiento, sexo, paisLabel, direccion)
         );
 
-        //Asignando un mensaje a nuestra notificacion
         mensaje.innerHTML = "Se ha registrado un nuevo paciente";
-        //Llamando al componente de Bootstrap
         toast.show();
-
-        //Limpiando formulario
         limpiarForm();
     } else {
-        //Asignando un mensaje a nuestra notificacion
         mensaje.innerHTML = "Faltan campos por completar";
-        //Llamando al componente de Bootstrap
         toast.show();
     }
 };
 
-//Funcion que imprime la ficha de los pacientes registrados
+
+// GENERAR TABLA
 function imprimirFilas() {
-    let $fila = "";
+    let filas = "";
     let contador = 1;
 
     arrayPaciente.forEach((element) => {
-        $fila += `<tr>
-            <td scope="row" class="text-center fw-bold">${contador}</td>
+        filas += `<tr>
+            <td class="text-center fw-bold">${contador}</td>
             <td>${element[0]}</td>
             <td>${element[1]}</td>
             <td>${element[2]}</td>
@@ -102,88 +90,131 @@ function imprimirFilas() {
             <td>${element[4]}</td>
             <td>${element[5]}</td>
             <td>
-                <button id="idBtnEditar${contador}" type="button" class="btn btn-primary" alt="Eliminar">
+                <button id="idBtnEditar${contador}" class="btn btn-primary">
                     <i class="bi bi-pencil-square"></i>
                 </button>
-                <button id="idBtnEliminar${contador}" type="button" class="btn btn-danger" alt="Editar">
+                <button id="idBtnEliminar${contador}" class="btn btn-danger">
                     <i class="bi bi-trash3-fill"></i>
                 </button>
             </td>
         </tr>`;
         contador++;
     });
-    return $fila;
+
+    return filas;
 }
 
 const imprimirPaciente5 = () => {
-    let $table = `<div class="table-responsive">
+    let tabla = `<div class="table-responsive">
         <table class="table table-striped table-hover table-bordered">
             <tr>
-                <th scope="col" class="text-center" style="width:5%">#</th>
-                <th scope="col" class="text-center" style="width:15%">Nombre</th>
-                <th scope="col" class="text-center" style="width:15%">Apellido</th>
-                <th scope="col" class="text-center" style="width:10%">Fecha nacimiento</th>
-                <th scope="col" class="text-center" style="width:10%">Sexo</th>
-                <th scope="col" class="text-center" style="width:10%">Pais</th>
-                <th scope="col" class="text-center" style="width:25%">Direccion</th>
-                <th scope="col" class="text-center" style="width:10%">Opciones</th>
+                <th class="text-center">#</th>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Apellido</th>
+                <th class="text-center">Fecha nacimiento</th>
+                <th class="text-center">Sexo</th>
+                <th class="text-center">País</th>
+                <th class="text-center">Dirección</th>
+                <th class="text-center">Opciones</th>
             </tr>
             ${imprimirFilas()}
         </table>
     </div>`;
 
-    document.getElementById("idTablaPacientes").innerHTML = $table;
+    document.getElementById("idTablaPacientes").innerHTML = tabla;
+
+    enlazarBotones();
+};
+// ENLAZAR BOTONES EDITAR / ELIMINAR
+
+function enlazarBotones() {
+    arrayPaciente.forEach((_, index) => {
+        let num = index + 1;
+
+        const btnEditar = document.getElementById(`idBtnEditar${num}`);
+        const btnEliminar = document.getElementById(`idBtnEliminar${num}`);
+
+        if (btnEditar) btnEditar.onclick = () => abrirModalEditar(index);
+        if (btnEliminar) btnEliminar.onclick = () => eliminarPaciente(index);
+    });
+}
+
+// EDITAR
+function abrirModalEditar(index) {
+    const p = arrayPaciente[index];
+
+    document.getElementById("idIndexEditar").value = index;
+    document.getElementById("idEditNombre").value = p[0];
+    document.getElementById("idEditApellido").value = p[1];
+    document.getElementById("idEditFecha").value = p[2];
+    document.getElementById("idEditSexo").value = p[3];
+    document.getElementById("idEditPais").value = p[4];
+    document.getElementById("idEditDireccion").value = p[5];
+
+    new bootstrap.Modal(document.getElementById("idModalEditar")).show();
+}
+
+document.getElementById("idBtnGuardarCambios").onclick = () => {
+    const index = document.getElementById("idIndexEditar").value;
+
+    arrayPaciente[index] = [
+        document.getElementById("idEditNombre").value,
+        document.getElementById("idEditApellido").value,
+        document.getElementById("idEditFecha").value,
+        document.getElementById("idEditSexo").value,
+        document.getElementById("idEditPais").value,
+        document.getElementById("idEditDireccion").value
+    ];
+
+    imprimirPaciente5();
+    mensaje.innerHTML = "Paciente editado correctamente";
+    toast.show();
+
+    bootstrap.Modal.getInstance(document.getElementById("idModalEditar")).hide();
 };
 
-// Contador global de los option correspondiente
-// al select (cmb) pais
+// ELIMINAR
+function eliminarPaciente(index) {
+    if (confirm("¿Desea eliminar este paciente?")) {
+        arrayPaciente.splice(index, 1);
+        imprimirPaciente5();
+
+        mensaje.innerHTML = "Paciente eliminado";
+        toast.show();
+    }
+}
+
+// AGREGAR NUEVO PAÍS
 let contadorGlobalOption = cmbPais.children.length;
+
 const addPais = () => {
     let paisNew = inputNombrePais.value;
 
-    if (paisNew != "") {
-        // Creando nuevo option con la API DOM
+    if (paisNew !== "") {
         let option = document.createElement("option");
         option.textContent = paisNew;
         option.value = contadorGlobalOption + 1;
 
-        //Agregando el nuevo option en el select
         cmbPais.appendChild(option);
 
-        //Asignando un mensaje a nuestra notificacion
         mensaje.innerHTML = "País agregado correctamente";
-        //Llamando al componente de Bootstrap
         toast.show();
     } else {
-        //Asignando un mensaje a nuestra notificacion
         mensaje.innerHTML = "Faltan campos por completar";
-        //Llamando al componente de Bootstrap
         toast.show();
     }
 };
 
-// Agregando eventos a los botones y utlilizando funciones tipo flecha
-buttonLimpiarPaciente.onclick = () => {
-    limpiarForm();
-};
+// ASIGNAR EVENTOS
+buttonLimpiarPaciente.onclick = limpiarForm;
+buttonAgregarPaciente.onclick = addPaciente;
+buttonMostrarPaciente.onclick = imprimirPaciente5;
+buttonAgregarPais.onclick = addPais;
 
-buttonAgregarPaciente.onclick = () => {
-    addPaciente();
-};
-
-buttonMostrarPaciente.onclick = () => {
-    imprimirPaciente5();
-};
-
-buttonAgregarPais.onclick = () => {
-    addPais();
-};
-
-//Se agrega el focus en el campo nombre pais del modal
 idModal.addEventListener("shown.bs.modal", () => {
     inputNombrePais.value = "";
     inputNombrePais.focus();
 });
 
-//Ejecutar funcion al momento de cargar la pagina HTML
+
 limpiarForm();
